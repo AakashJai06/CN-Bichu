@@ -28,6 +28,7 @@ int main() {
     printf("File content received:\n");
     while ((recv(serverSocket,recvline,MAX,0)) > 0) {
         printf("%s", recvline);
+        memset(recvline,0,MAX);
     }
     close(serverSocket);
     return 0;
