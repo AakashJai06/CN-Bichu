@@ -33,8 +33,7 @@ int main() {
     file = fopen(filename, "r");
     if (!file) {
         printf("File not found!\n");
-        sprintf(buffer, "ERROR: File not found.\n");
-        send(clientSocket, buffer, strlen(buffer), 0);
+        send(clientSocket,"ERROR: File not found.", strlen("ERROR: File not found.")+1, 0);
     } else {
         while (fgets(buffer, BUFFER_SIZE, file)) {
             send(clientSocket, buffer, strlen(buffer), 0);
