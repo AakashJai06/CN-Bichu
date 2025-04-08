@@ -9,7 +9,7 @@
 #define PORT 8080
 
 int main(){
-  int sockfd,newsock;
+  int sockfd;
   struct sockaddr_in server;
   socklen_t len = sizeof(server);
   char buffer[BUFFER_SIZE];
