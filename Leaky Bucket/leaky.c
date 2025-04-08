@@ -28,5 +28,13 @@ int main() {
         if (store < 0) store = 0;
         printf("After outgoing, %d packet(s) left in buffer\n", store);
     }
+    int time=1;
+    while (store > 0) {
+      printf("\nTime unit %d (Draining remaining packets)\n", time++);
+      int drain = (store >= outgoing) ? outgoing : store;
+      printf("Leaking out %d packets...\n", drain);
+      store -= drain;
+      printf("Remaining in bucket: %d packet(s)\n", store);
+  }
     return 0;
 }
