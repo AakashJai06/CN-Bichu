@@ -1,54 +1,56 @@
 #include <stdio.h>
 
-int costMatrix[20][20], n;
+#define INFINITY 9999
+#define MAX 10
 
-struct routers {
-    int distance[20];
-    int adjNodes[20];
-} node[20];
+int cost[MAX][MAX], dist[MAX][MAX], next_hop[MAX][MAX];
+int nodes;
 
-void readCostMatrix() {
-    int i, j;
-    printf("\nEnter cost matrix\n");
-    for (i = 0; i < n; ++i) {
-        for (j = 0; j < n; ++j) {
-            scanf("%d", &costMatrix[i][j]);
-            node[i].distance[j] = costMatrix[i][j];
-            node[i].adjNodes[j] = j;
-        }
-        costMatrix[i][i] = 0; 
-    }
-}
 
-void calcRoutingTable() {
-    int i, j, k;
-    for (i = 0; i < n; ++i) {
-        for (j = 0; j < n; ++j) {
-            for (k = 0; k < n; ++k) {
-                if (node[i].distance[j] > costMatrix[i][k] + node[k].distance[j]) {
-                    node[i].distance[j] = node[i].distance[k] + node[k].distance[j];
-                    node[i].adjNodes[j] = k;
+void updateRoutes() {
+    int updated;
+    do {
+        updated = 0;
+        for (int i = 0; i < nodes; i++) {
+            for (int j = 0; j < nodes; j++) {
+                for (int k = 0; k < nodes; k++) {
+                    if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                        next_hop[i][j] = next_hop[i][k];
+                        updated = 1;
+                    }
                 }
             }
         }
-    }
+    } while (updated);
 }
 
-void displayRoutes() {
-    int i, j;
-    for (i = 0; i < n; ++i) {
-        printf("\nRouter %d\n", i + 1);
-        for (j = 0; j < n; ++j) {
-            printf("Node %d via %d : Distance %d\n", j + 1, node[i].adjNodes[j] + 1, node[i].distance[j]);
+void display() {
+    for (int i = 0; i < nodes; i++) {
+        printf("\nRouting table for Router %d:\n", i + 1);
+        printf("Destination\tCost\tNext Hop\n");
+        for (int j = 0; j < nodes; j++) {
+            printf("%d\t\t%d\t%d\n", j + 1, dist[i][j], next_hop[i][j] + 1);
         }
     }
 }
 
 int main() {
-    printf("Number of nodes: ");
-    scanf("%d", &n);
-    readCostMatrix();
-    calcRoutingTable();
-    displayRoutes();
+    printf("Enter the number of routers: ");
+    scanf("%d", &nodes);
+
+    printf("Enter the cost matrix (use %d for no direct link):\n", INFINITY);
+    for (int i = 0; i < nodes; i++) {
+        for (int j = 0; j < nodes; j++) {
+            scanf("%d", &cost[i][j]);
+            dist[i][j] = cost[i][j];
+            next_hop[i][j] = j;
+        }
+        cost[i][i] = 0;
+    }
+
+    updateRoutes();
+    display();
+
     return 0;
 }
