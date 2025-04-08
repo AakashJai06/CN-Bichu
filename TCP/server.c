@@ -28,6 +28,8 @@ int main(){
 
   printf("Message From Client: %s\n", buffer);
 
+  send(newsock,"Message from server",strlen("Message from server")+1,0);
+
     close(newsock);
     close(sockfd);
   return 0;
