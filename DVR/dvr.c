@@ -47,6 +47,8 @@ int main() {
             next_hop[i][j] = j;
         }
         cost[i][i] = 0;
+        dist[i][i] = 0;
+        next_hop[i][i] = i;
     }
 
     updateRoutes();
