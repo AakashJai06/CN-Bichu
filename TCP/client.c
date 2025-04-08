@@ -1,36 +1,33 @@
 #include <sys/socket.h>
-#include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <arpa/inet.h>
 
 #define BUFFER_SIZE 1024
 #define PORT 8080
 
 int main(){
-  int sockfd,newsock;
-  struct sockaddr_in server,client;
-  socklen_t len = sizeof(client);
-  char buffer[BUFFER_SIZE];
+  int sockfd;
+  struct sockaddr_in server;
+  socklen_t len = sizeof(server);
+  char buffer[BUFFER_SIZE],response[BUFFER_SIZE];
 
   sockfd = socket(AF_INET,SOCK_STREAM,0);
 
   server.sin_family = AF_INET;
   server.sin_port = htons(PORT);
-  server.sin_addr.s_addr = INADDR_ANY;
+  server.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-  bind(sockfd,(struct sockaddr *) &server,sizeof(server));
-  listen(sockfd,5);
+  connect(sockfd,(struct sockaddr *) &server,sizeof(server));
 
-  newsock = accept(sockfd,(struct sockaddr *) &client,&len);
-  recv(newsock,buffer,BUFFER_SIZE,0);
+  printf("Enter Message to send : ");
+  fgets(buffer,100,stdin);
+  send(sockfd,buffer,strlen(buffer),0);
+  recv(sockfd,response,BUFFER_SIZE,0);
+  printf("%s",response);
 
-  printf("Message From Client: %s\n", buffer);
-
-  send(newsock,"Message from server",strlen("Message from server")+1,0);
-
-    close(newsock);
     close(sockfd);
   return 0;
 }
