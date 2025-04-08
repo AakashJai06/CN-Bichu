@@ -6,7 +6,7 @@
 #define TIMEOUT 3
 #define TOTAL_PACKETS 5
 
-int simulate_acknowledgment() {
+int ack() {
     return rand() % 10 < 7;
 }
 
@@ -16,8 +16,7 @@ int main() {
     while(packet<=TOTAL_PACKETS) {
         printf("Sending packet %d\n",packet);
         sleep(1);
-        ack=simulate_acknowledgment();
-        if(ack) {
+        if(ack()) {
             printf("ACK received for packet %d\n\n",packet);
             packet++;
         } else {
